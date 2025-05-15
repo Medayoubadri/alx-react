@@ -1,0 +1,21 @@
+button {
+  margin-right: 1rem;
+  padding: 12px 16px;
+  background-color: #c1384c;
+  color: white;
+  font-size: medium;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a12b3c;
+  transition: background-color 0.3s ease;
+}
+
+#count {
+  display: inline;
+  font-weight: bold;
+  margin: 0;
+}
