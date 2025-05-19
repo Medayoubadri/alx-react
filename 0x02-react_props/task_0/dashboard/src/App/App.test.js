@@ -1,7 +1,7 @@
 import App from "./App";
 
 describe("Test App.js", () => {
-  it("App without crashing", (done) => {
+  it("Renders App without crashing", (done) => {
     expect(shallow(<App />).exists());
     done();
   });

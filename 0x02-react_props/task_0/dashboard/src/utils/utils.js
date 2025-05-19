@@ -1,3 +1,4 @@
+import React from "react";
 export const getFullYear = () => new Date().getFullYear();
 
 export const getFooterCopy = (isIndex) =>
