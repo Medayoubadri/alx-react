@@ -23,11 +23,7 @@ const listNotifications = [
   },
 ];
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+class App extends React.Component {
   render() {
     const { isLoggedIn } = this.props;
     return (
