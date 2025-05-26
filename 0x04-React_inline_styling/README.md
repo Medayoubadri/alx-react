@@ -128,7 +128,7 @@ Make sure that a label and an input are on each line
 Make sure that the button is on a new line
 The screen should look like the image below:
 
-![Login Screen](/task_3/dashboard/src/assets/Login.png)
+![Login Screen](/alx-react/0x04-React_inline_styling/task_3/dashboard/src/assets/Login.png)
 
 Modify the component Notifications in task_3/dashboard/src/Notifications/Notifications.js:
 
@@ -146,7 +146,7 @@ Requirements:
 
 When the notifications panel is open, the screen should look like the image below:
 
-![Notifications Screen](/task_3/dashboard/src/assets/NotificationItem.png)
+![Notifications Screen](/alx-react/0x04-React_inline_styling/task_3/dashboard/src/assets/NotificationItem.png)
 
 **Repo:**
 
@@ -173,7 +173,7 @@ Requirements:
 
 When the notifications panel is hovered or opened, the UI should look like the image below:
 
-![Notifications Screen](/task_4/dashboard/src/assets/Notifications.gif)
+![Notifications Screen](/alx-react/0x04-React_inline_styling/task_4/dashboard/src/assets/Notifications.gif)
 
 **Repo:**
 
