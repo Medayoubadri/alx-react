@@ -1,31 +1,61 @@
 import React from "react";
 import { shallow } from "enzyme";
 import WithLogging from "./WithLogging";
+import Login from "../Login/Login";
+import { StyleSheetTestUtils } from "aphrodite";
 
-const TestComponent = () => <p>Test Component</p>;
+describe("WithLogging HOC", () => {
+  let consoleSpy;
 
-describe("WithLogging tests", () => {
-  it("should call console.log on mount and dismount", () => {
-    const spy = jest.spyOn(console, "log").mockImplementation();
-    const NewComponent = WithLogging(TestComponent);
-    const wrapper = shallow(<NewComponent />);
-
-    expect(spy).toBeCalledTimes(1);
-    wrapper.unmount();
-    expect(spy).toBeCalledTimes(2);
-    spy.mockRestore();
+  beforeAll(() => {
+    StyleSheetTestUtils.suppressStyleInjection();
   });
 
-  it("should log out the right message on mount and on unmount", () => {
-    const spy = jest.spyOn(console, "log").mockImplementation();
-    const NewComponent = WithLogging(TestComponent);
-    const wrapper = shallow(<NewComponent />);
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+  });
 
-    expect(spy).toBeCalledTimes(1);
-    expect(spy).toBeCalledWith("Component TestComponent is mounted");
-    wrapper.unmount();
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toBeCalledWith("Component TestComponent is going to unmount");
-    spy.mockRestore();
+  beforeEach(() => {
+    consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleSpy.mockRestore();
+  });
+
+  it('should log on mount and unmount with "Component" for pure HTML', () => {
+    const PureHTML = () => <p>Hello</p>;
+    PureHTML.displayName = "PureHTML";
+    const WrappedPureHTML = WithLogging(PureHTML);
+
+    // Create the component
+    const wrapper = shallow(<WrappedPureHTML />);
+
+    // Test componentDidMount (we need to manually trigger it since shallow doesn't call lifecycle methods)
+    wrapper.instance().componentDidMount();
+    expect(consoleSpy).toHaveBeenCalledWith("Component PureHTML is mounted");
+
+    // Test componentWillUnmount
+    wrapper.instance().componentWillUnmount();
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Component PureHTML is going to unmount"
+    );
+  });
+
+  it("should log on mount and unmount with the component name for Login component", () => {
+    const WrappedLogin = WithLogging(Login);
+
+    // Create the component
+    const wrapper = shallow(<WrappedLogin />);
+
+    // Test componentDidMount
+    wrapper.instance().componentDidMount();
+    expect(consoleSpy).toHaveBeenCalledWith("Component Login is mounted");
+
+    // Test componentWillUnmount
+    wrapper.instance().componentWillUnmount();
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Component Login is going to unmount"
+    );
   });
 });

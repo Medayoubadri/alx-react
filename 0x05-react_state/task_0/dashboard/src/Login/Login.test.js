@@ -1,23 +1,24 @@
-import { shallow } from "enzyme";
 import React from "react";
+import { shallow } from "enzyme";
 import Login from "./Login";
 import { StyleSheetTestUtils } from "aphrodite";
 
-beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
-});
-afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
-
-describe("Header", () => {
-  it("should render without crashing", () => {
-    const wrapper = shallow(<Login />);
-    expect(wrapper.exists()).toEqual(true);
+describe("Login component", () => {
+  beforeAll(() => {
+    StyleSheetTestUtils.suppressStyleInjection();
   });
-  it("should have 2 input tags and 2 label tags", () => {
-    const wrapper = shallow(<Login />);
-    expect(wrapper.find("label")).toHaveLength(2);
-    expect(wrapper.find("input")).toHaveLength(2);
+
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+  });
+
+  it("renders without crashing", () => {
+    shallow(<Login />);
+  });
+
+  it("renders input and label tags", () => {
+    const nanika = shallow(<Login />);
+    expect(nanika.find("input")).toHaveLength(2);
+    expect(nanika.find("label")).toHaveLength(2);
   });
 });

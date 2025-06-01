@@ -4,20 +4,24 @@ import { StyleSheet, css } from "aphrodite";
 
 function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
   return (
-    <tr className={isHeader ? css(styles.header) : css(styles.normal)}>
+    <tr className={css(isHeader ? styles.headerRow : styles.defaultRow)}>
       {isHeader ? (
         textSecondCell === null ? (
-          <th colSpan={2}>{textFirstCell}</th>
+          <th colSpan="2" className={css(styles.thDefault)}>
+            {textFirstCell}
+          </th>
         ) : (
           <>
-            <th>{textFirstCell}</th>
-            <th style={headerStyle}>{textSecondCell}</th>
+            <th className={css(styles.thDefault, styles.thFirstChild)}>
+              {textFirstCell}
+            </th>
+            <th className={css(styles.thDefault)}>{textSecondCell}</th>
           </>
         )
       ) : (
         <>
-          <td>{textFirstCell}</td>
-          <td>{textSecondCell}</td>
+          <td className={css(styles.tdDefault)}>{textFirstCell}</td>
+          <td className={css(styles.tdDefault)}>{textSecondCell}</td>
         </>
       )}
     </tr>
@@ -25,12 +29,21 @@ function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
 }
 
 const styles = StyleSheet.create({
-  header: {
+  headerRow: {
     backgroundColor: "#deb5b545",
   },
-
-  normal: {
+  defaultRow: {
     backgroundColor: "#f5f5f5ab",
+  },
+  thDefault: {
+    borderBottom: "2px solid lightgray",
+    padding: "0.5rem",
+  },
+  thFirstChild: {
+    textAlign: "left",
+  },
+  tdDefault: {
+    padding: "0.5rem",
   },
 });
 

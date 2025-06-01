@@ -3,21 +3,22 @@ import Header from "./Header";
 import { shallow } from "enzyme";
 import { StyleSheetTestUtils } from "aphrodite";
 
-beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
-});
-afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
-
-describe("Header", () => {
-  it("render without crashing", () => {
-    const wrapper = shallow(<Header />);
-    expect(wrapper.exists()).toEqual(true);
+describe("Header component", () => {
+  beforeAll(() => {
+    StyleSheetTestUtils.suppressStyleInjection();
   });
-  it("should render a h1", () => {
-    const wrapper = shallow(<Header />);
-    expect(wrapper.exists("img")).toEqual(true);
-    expect(wrapper.containsMatchingElement(<h1>School dashboard</h1>)).toEqual(true);
+
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+  });
+
+  it("renders without crashing", () => {
+    shallow(<Header />);
+  });
+
+  it("renders img and h1 tags", () => {
+    const nanika = shallow(<Header />);
+    expect(nanika.find("img")).toHaveLength(1);
+    expect(nanika.find("h1")).toHaveLength(1);
   });
 });

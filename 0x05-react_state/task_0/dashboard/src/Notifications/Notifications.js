@@ -1,20 +1,20 @@
 import React, { Component } from "react";
-import { StyleSheet, css } from "aphrodite";
 import closeIcon from "../assets/close-icon.png";
 import NotificationItem from "./NotificationItem";
 import PropTypes from "prop-types";
 import NotificationItemShape from "./NotificationItemShape";
+import { StyleSheet, css } from "aphrodite";
 
 class Notifications extends Component {
   constructor(props) {
     super(props);
-
     this.markAsRead = this.markAsRead.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
     return (
-      nextProps.length > this.props.listNotifications.length ||
+      nextProps.listNotifications.length >
+        this.props.listNotifications.length ||
       nextProps.displayDrawer !== this.props.displayDrawer
     );
   }
@@ -24,16 +24,20 @@ class Notifications extends Component {
   }
 
   render() {
+    const {
+      displayDrawer,
+      listNotifications,
+      handleDisplayDrawer,
+      handleHideDrawer,
+    } = this.props;
     return (
-      <React.Fragment>
-        {!this.props.displayDrawer ? (
-          <div
-            className={css(styles.menuItem)}
-            onClick={this.props.handleDisplayDrawer}
-          >
+      <>
+        {!displayDrawer && (
+          <div className={css(styles.menuItem)} onClick={handleDisplayDrawer}>
             <p>Your notifications</p>
           </div>
-        ) : (
+        )}
+        {displayDrawer && (
           <div className={css(styles.Notifications)}>
             <button
               style={{
@@ -43,107 +47,112 @@ class Notifications extends Component {
                 border: "none",
                 fontSize: "15px",
                 position: "absolute",
-                right: "3px",
-                top: "3px",
+                right: "2px",
+                top: "2px",
                 cursor: "pointer",
-                outline: "none",
               }}
               aria-label="Close"
-              onClick={(e) => {
-                console.log("Close button has been clicked");
-                this.props.handleHideDrawer();
-              }}
+              onClick={handleHideDrawer}
             >
-              <img src={closeIcon} alt="close icon" width="10px" />
+              <img
+                className={css(styles.img)}
+                src={closeIcon}
+                alt="closeIcon"
+              />
             </button>
-            {this.props.listNotifications.length != 0 ? (
-              <p>Here is the list of notifications</p>
-            ) : null}
-            <ul>
-              {this.props.listNotifications.length == 0 ? (
-                <NotificationItem
-                  type="default"
-                  value="No new notification for now"
-                />
-              ) : null}
-              {this.props.listNotifications.map((val, idx) => {
-                return (
-                  <NotificationItem
-                    type={val.type}
-                    value={val.value}
-                    html={val.html}
-                    key={val.id}
-                    markAsRead={this.markAsRead}
-                    id={val.id}
-                  />
-                );
-              })}
-            </ul>
+            {listNotifications.length === 0 ? (
+              <p>No new notification for now</p>
+            ) : (
+              <>
+                <p className={css(styles.p)}>
+                  Here is the list of notifications
+                </p>
+                <ul className={css(styles.notificationsList)}>
+                  {listNotifications.map(({ id, type, value, html }) => (
+                    <NotificationItem
+                      key={id}
+                      id={id}
+                      type={type}
+                      value={value}
+                      html={html}
+                      markAsRead={this.markAsRead}
+                    />
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         )}
-      </React.Fragment>
+      </>
     );
   }
 }
 
-const opacityAnim = {
-  "0%": { opacity: 0.5 },
-  "100%": { opacity: 1 },
-};
-
-const bounceAnim = {
-  "0%": { transform: "translateY(0px)" },
-  "33%": { transform: "translateY(-5px)" },
-  "66%": { transform: "translateY(5px)" },
-  "100%": { transform: "translateY(0px)" },
-};
-
 const styles = StyleSheet.create({
   Notifications: {
-    padding: "1em",
-    border: "2px dashed red",
+    top: "2rem",
+    right: "1rem",
     position: "absolute",
-    top: "1.8em",
-    right: "0",
+    padding: "0 0 0 1.5rem",
+    border: "2px dashed #e0354b",
+    fontSize: "20px",
     zIndex: "100",
+    backgroundColor: "white",
     "@media (max-width: 900px)": {
       width: "100%",
-      padding: "0px",
-      fontSize: 20,
+      padding: "0",
       position: "relative",
       right: 0,
       left: 0,
+      bottom: 0,
+      height: "100%",
       border: "none",
     },
   },
 
-  "notification-header": {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-
   menuItem: {
-    position: "relative",
-    zIndex: 100,
+    top: "0",
+    right: "0",
+    position: "absolute",
     textAlign: "right",
+    marginRight: "1rem",
+    padding: "0.5rem 0",
+    cursor: "pointer",
+    zIndex: "100",
     ":hover": {
-      cursor: "pointer",
-      animationName: [opacityAnim, bounceAnim],
-      animationDuration: "1s, 0.5s",
-      animationIterationCount: "3",
+      animationName: [
+        {
+          "0%": { opacity: 0.5 },
+          "100%": { opacity: 1 },
+        },
+        {
+          "0%": { transform: "translateY(0px)" },
+          "25%": { transform: "translateY(-5px)" },
+          "50%": { transform: "translateY(0px)" },
+          "75%": { transform: "translateY(5px)" },
+          "100%": { transform: "translateY(0px)" },
+        },
+      ],
+      animationDuration: ["1s", "0.5s"],
+      animationIterationCount: 3,
     },
   },
 
-  ul: {
+  notificationsList: {
+    padding: 0,
     "@media (max-width: 900px)": {
       padding: 0,
     },
   },
-  button: {
-    "@media (max-width: 900px)": {
-      position: "relative",
-      float: "right",
-    },
+
+  p: {
+    margin: "0",
+    marginTop: "15px",
+  },
+
+  img: {
+    marginTop: "5px",
+    width: "15px",
   },
 });
 

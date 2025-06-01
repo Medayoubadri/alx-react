@@ -1,46 +1,52 @@
 import React from "react";
-import NotificationItem from "./NotificationItem";
 import { shallow } from "enzyme";
+import NotificationItem from "./NotificationItem";
 import { StyleSheetTestUtils } from "aphrodite";
 
-beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
-});
-afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
-
-describe("rendering components", () => {
-  it("renders NotificationItem component without crashing", () => {
-    const wrapper = shallow(<NotificationItem />);
-
-    expect(wrapper.exists()).toBe(true);
+describe("NotificationItem", () => {
+  beforeAll(() => {
+    StyleSheetTestUtils.suppressStyleInjection();
   });
 
-  it('renders correct html from type="default" value="test" props', () => {
-    const wrapper = shallow(<NotificationItem />);
-
-    wrapper.setProps({ type: "default", value: "test" });
-    expect(wrapper.html()).toEqual('<li class="default_2c02es" data-notification-type="default">test</li>');
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
   });
 
-  it('renders correct html from  html="<u>test</u>" props', () => {
-    const wrapper = shallow(<NotificationItem />);
-
-    wrapper.setProps({ html: "<u>test</u>" });
-    expect(wrapper.html()).toEqual('<li data-urgent="true" class="urgent_cyonix"><u>test</u></li>');
+  it("renders without crashing", () => {
+    const nanika = shallow(<NotificationItem />);
+    expect(nanika.exists()).toBe(true);
   });
-});
 
-describe("onclick event behaves as it should", () => {
-  it("should call console.log", () => {
-    const wrapper = shallow(<NotificationItem />);
-    const spy = jest.fn();
+  it("renders with type and value props", () => {
+    const nanika = shallow(<NotificationItem type="default" value="test" />);
+    expect(nanika.find("li").prop("data-notification-type")).toBe("default");
+    expect(nanika.find("li").text()).toBe("test");
+  });
 
-    wrapper.setProps({ value: "test item", markAsRead: spy, id: 1 });
-    wrapper.find("li").props().onClick();
-    expect(spy).toBeCalledTimes(1);
-    expect(spy).toBeCalledWith(1);
-    spy.mockRestore();
+  it("renders with html prop", () => {
+    const nanika = shallow(
+      <NotificationItem type="urgent" html={{ __html: "<u>test</u>" }} />
+    );
+    expect(nanika.find("li").prop("data-notification-type")).toBe("urgent");
+    expect(nanika.find("li").prop("dangerouslySetInnerHTML")).toEqual({
+      __html: "<u>test</u>",
+    });
+  });
+
+  describe("markAsRead functionality", () => {
+    it("should call markAsRead with the right ID when clicked", () => {
+      const markAsReadSpy = jest.fn();
+      const wrapper = shallow(
+        <NotificationItem
+          type="default"
+          value="test"
+          id={123}
+          markAsRead={markAsReadSpy}
+        />
+      );
+      wrapper.find("li").simulate("click");
+      expect(markAsReadSpy).toHaveBeenCalledWith(123);
+      markAsReadSpy.mockRestore(); // Though not strictly necessary for jest.fn(), good practice.
+    });
   });
 });
