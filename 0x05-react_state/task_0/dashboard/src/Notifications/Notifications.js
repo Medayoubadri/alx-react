@@ -1,22 +1,20 @@
 import React, { Component } from "react";
+import { StyleSheet, css } from "aphrodite";
 import closeIcon from "../assets/close-icon.png";
 import NotificationItem from "./NotificationItem";
 import PropTypes from "prop-types";
 import NotificationItemShape from "./NotificationItemShape";
-import { StyleSheet, css } from "aphrodite";
 
 class Notifications extends Component {
   constructor(props) {
     super(props);
+
     this.markAsRead = this.markAsRead.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
-    // Only update if the new listNotifications is longer than the previous one
-    // or if displayDrawer prop has changed
     return (
-      nextProps.listNotifications.length >
-        this.props.listNotifications.length ||
+      nextProps.length > this.props.listNotifications.length ||
       nextProps.displayDrawer !== this.props.displayDrawer
     );
   }
@@ -26,20 +24,16 @@ class Notifications extends Component {
   }
 
   render() {
-    const {
-      displayDrawer,
-      listNotifications,
-      handleDisplayDrawer,
-      handleHideDrawer,
-    } = this.props;
     return (
-      <>
-        {!displayDrawer && (
-          <div className={css(styles.menuItem)} onClick={handleDisplayDrawer}>
+      <React.Fragment>
+        {!this.props.displayDrawer ? (
+          <div
+            className={css(styles.menuItem)}
+            onClick={this.props.handleDisplayDrawer}
+          >
             <p>Your notifications</p>
           </div>
-        )}
-        {displayDrawer && (
+        ) : (
           <div className={css(styles.Notifications)}>
             <button
               style={{
@@ -49,114 +43,107 @@ class Notifications extends Component {
                 border: "none",
                 fontSize: "15px",
                 position: "absolute",
-                right: "2px",
-                top: "2px",
+                right: "3px",
+                top: "3px",
                 cursor: "pointer",
+                outline: "none",
               }}
               aria-label="Close"
-              onClick={handleHideDrawer}
+              onClick={(e) => {
+                console.log("Close button has been clicked");
+                this.props.handleHideDrawer();
+              }}
             >
-              <img
-                className={css(styles.img)}
-                src={closeIcon}
-                alt="closeIcon"
-              />
+              <img src={closeIcon} alt="close icon" width="10px" />
             </button>
-            {listNotifications.length === 0 ? (
-              <p>No new notification for now</p>
-            ) : (
-              <>
-                <p className={css(styles.p)}>
-                  Here is the list of notifications
-                </p>
-                <ul className={css(styles.notificationsList)}>
-                  {listNotifications.map(({ id, type, value, html }) => (
-                    <NotificationItem
-                      key={id}
-                      id={id}
-                      type={type}
-                      value={value}
-                      html={html}
-                      markAsRead={this.markAsRead}
-                    />
-                  ))}
-                </ul>
-              </>
-            )}
+            {this.props.listNotifications.length != 0 ? (
+              <p>Here is the list of notifications</p>
+            ) : null}
+            <ul>
+              {this.props.listNotifications.length == 0 ? (
+                <NotificationItem
+                  type="default"
+                  value="No new notification for now"
+                />
+              ) : null}
+              {this.props.listNotifications.map((val, idx) => {
+                return (
+                  <NotificationItem
+                    type={val.type}
+                    value={val.value}
+                    html={val.html}
+                    key={val.id}
+                    markAsRead={this.markAsRead}
+                    id={val.id}
+                  />
+                );
+              })}
+            </ul>
           </div>
         )}
-      </>
+      </React.Fragment>
     );
   }
 }
 
+const opacityAnim = {
+  "0%": { opacity: 0.5 },
+  "100%": { opacity: 1 },
+};
+
+const bounceAnim = {
+  "0%": { transform: "translateY(0px)" },
+  "33%": { transform: "translateY(-5px)" },
+  "66%": { transform: "translateY(5px)" },
+  "100%": { transform: "translateY(0px)" },
+};
+
 const styles = StyleSheet.create({
   Notifications: {
-    border: "2px dashed #e0354b",
-    padding: "0 0 0 1.5rem",
+    padding: "1em",
+    border: "2px dashed red",
     position: "absolute",
-    top: "2rem",
-    right: "1rem",
-    width: "20%",
-    fontSize: "20px",
-    zIndex: 1000,
-    backgroundColor: "white",
+    top: "1.8em",
+    right: "0",
+    zIndex: "100",
     "@media (max-width: 900px)": {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
       width: "100%",
-      height: "100%",
+      padding: "0px",
+      fontSize: 20,
+      position: "relative",
+      right: 0,
+      left: 0,
       border: "none",
-      zIndex: 999,
-      background: "white",
-      padding: "0",
     },
+  },
+
+  "notification-header": {
+    display: "flex",
+    justifyContent: "space-between",
   },
 
   menuItem: {
+    position: "relative",
+    zIndex: 100,
     textAlign: "right",
-    marginRight: "1rem",
-    padding: "0.5rem 0",
-    cursor: "pointer",
-    float: "right",
-    backgroundColor: "#fff8f8",
     ":hover": {
-      animationName: [
-        {
-          "0%": { opacity: 0.5 },
-          "100%": { opacity: 1 },
-        },
-        {
-          "0%": { transform: "translateY(0px)" },
-          "25%": { transform: "translateY(-5px)" },
-          "50%": { transform: "translateY(0px)" },
-          "75%": { transform: "translateY(5px)" },
-          "100%": { transform: "translateY(0px)" },
-        },
-      ],
-      animationDuration: ["1s", "0.5s"],
-      animationIterationCount: 3,
+      cursor: "pointer",
+      animationName: [opacityAnim, bounceAnim],
+      animationDuration: "1s, 0.5s",
+      animationIterationCount: "3",
     },
   },
 
-  notificationsList: {
-    padding: 0,
+  ul: {
     "@media (max-width: 900px)": {
       padding: 0,
     },
   },
-
-  p: {
-    margin: "0",
-    marginTop: "15px",
-  },
-
-  img: {
-    marginTop: "5px",
-    width: "15px",
+  button: {
+    "@media (max-width: 900px)": {
+      position: "relative",
+      float: "right",
+    },
   },
 });
 
