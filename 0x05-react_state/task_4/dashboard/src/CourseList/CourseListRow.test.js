@@ -44,7 +44,9 @@ describe("CourseListRow", () => {
     );
     expect(wrapper.find("td")).toHaveLength(2);
     // First cell should contain a checkbox and the text
-    expect(wrapper.find("td").at(0).find("input[type='checkbox']")).toHaveLength(1);
+    expect(
+      wrapper.find("td").at(0).find("input[type='checkbox']")
+    ).toHaveLength(1);
     expect(wrapper.find("td").at(0).text()).toContain("test");
     expect(wrapper.find("td").at(1).text()).toEqual("test2");
   });
@@ -57,17 +59,17 @@ describe("CourseListRow", () => {
         textSecondCell="test2"
       />
     );
-    
+
     const checkbox = wrapper.find("input[type='checkbox']");
     expect(checkbox).toHaveLength(1);
     expect(checkbox.prop("checked")).toBe(false);
-    
+
     // Simulate checkbox change
     checkbox.simulate("change");
-    
+
     // Check that the checkbox is now checked
     expect(wrapper.find("input[type='checkbox']").prop("checked")).toBe(true);
-    
+
     // Check that the row has the checked style
     expect(wrapper.find("tr").hasClass(/rowChecked/)).toBe(true);
   });
@@ -80,7 +82,7 @@ describe("CourseListRow", () => {
         textSecondCell="test2"
       />
     );
-    
+
     expect(wrapper.find("input[type='checkbox']")).toHaveLength(0);
   });
 });

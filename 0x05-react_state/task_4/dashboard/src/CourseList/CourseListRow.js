@@ -10,10 +10,12 @@ function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
   };
 
   return (
-    <tr className={css(
-      isHeader ? styles.headerRow : styles.defaultRow,
-      isChecked && styles.rowChecked
-    )}>
+    <tr
+      className={css(
+        isHeader ? styles.headerRow : styles.defaultRow,
+        isChecked && styles.rowChecked
+      )}
+    >
       {isHeader ? (
         textSecondCell === null ? (
           <th colSpan="2" className={css(styles.thDefault)}>
