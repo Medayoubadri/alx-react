@@ -10,5 +10,5 @@ export const map = Map({
 });
 
 export const map2 = map
-  .set('2', 'Benjamin')
-  .set('4', 'Oliver');
+  .set(2, 'Benjamin')
+  .set(4, 'Oliver');
